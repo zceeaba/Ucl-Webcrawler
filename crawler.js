@@ -3,8 +3,15 @@ var cheerio = require('cheerio');
 var URL = require('url-parse');
 var prompt = require('prompt');
 
-var START_URL = prompt('What are you looking for?');
-var SEARCH_WORD = "stemming";
+  prompt.start();
+
+  prompt.get(['website'], function (err, result) {
+    if (err) { return onErr(err); }
+    console.log('Command-line input received:');
+    console.log('  website: ' + result.website);
+    START_URL = result.website;
+      
+    var SEARCH_WORD = "stemming";
 var MAX_PAGES_TO_VISIT = 10;
 
 var pagesVisited = {};
@@ -69,4 +76,10 @@ function collectInternalLinks($) {
     relativeLinks.each(function() {
         pagesToVisit.push(baseUrl + $(this).attr('href'));
     });
-}
+}  
+  });
+
+  function onErr(err) {
+    console.log(err);
+    return 1;
+  }
