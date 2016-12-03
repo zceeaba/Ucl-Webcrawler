@@ -5,14 +5,16 @@ var bodyParser = require('body-parser');
 var express = require('express');
 var app = express();
 
-var MAX_PAGES_TO_VISIT = 10;
+var MAX_PAGES_TO_VISIT = 100;
 
 var pagesVisited = {};
 var numPagesVisited = 0;
 var pagesToVisit = [];
+var foundURL = [];
+
 app.use(bodyParser.urlencoded({extended:true}));
 app.get('/', function(req,res){
-  res.sendFile(__dirname + '/view.html' );
+  res.sendFile(__dirname+'/view.html');
 });
 
 app.post('/myaction', function(req,res){
@@ -22,7 +24,8 @@ var url = new URL(START_URL);
 var baseUrl = url.protocol + "//" + url.hostname;
 pagesToVisit.push(START_URL);
 crawl();
-
+foundURL.push(START_URL);
+res.redirect('/');
 function crawl() {
   if(numPagesVisited >= MAX_PAGES_TO_VISIT) {
     console.log("Reached max limit of number of pages to visit.");
